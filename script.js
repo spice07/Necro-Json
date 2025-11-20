@@ -560,12 +560,24 @@ function createRow(m) {
     else if (key === "timing") addSelect(timingOptions, "timing");
     else {
       const input = document.createElement("input");
+      // ---- ここが追加 ----
+      if (key === "diceA" || key === "damageA") {
+        input.type = "number";
+        input.step = "1";             // 整数のみ
+        input.value = Number(m[key]); // 数値として保持
+        input.oninput = () => m[key] = Number(input.value || 0);
+      } 
+      // ---- 上記以外の text のまま ----
+      else {
       input.type = "text";
       input.value = m[key];
-      preventEnterReload(input);
       input.oninput = () => m[key] = input.value;
-      td.appendChild(input);
+      }
+
+    preventEnterReload(input);
+    td.appendChild(input);
     }
+
     tr.appendChild(td);
   });
 
@@ -740,5 +752,3 @@ function textOfRoll_A(m){//mはManeuverData
   }
   return returnRoll(m.roll) +diceA +" "+m.nameM+"】"+m.effect+damageA+helpM;
 }
-
-
