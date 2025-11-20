@@ -116,7 +116,7 @@ document.getElementById("sampleBtn").addEventListener("click", () => {
 
 [未練]　　 内容　　　 狂気度　　発狂時
 たからもの への 依存　■■■□　幼児退行(最大行動値減少(-2))
-A子　　　　への 恋心　■■■□　自傷行動(戦闘開始時と終了時に１つずつ、あなたはパーツを選んで損傷する)
+A子　　　　への 恋心　■■□□　自傷行動(戦闘開始時と終了時に１つずつ、あなたはパーツを選んで損傷する)
 B子　　　　への　　　 ■■■□　()
 C美　　　　への　　　 ■■■□　()
 　　　　　 への　　　 ■■■□　()
@@ -740,4 +740,5 @@ function textOfRoll_A(m){//mはManeuverData
   }
   return returnRoll(m.roll) +diceA +" "+m.nameM+"】"+m.effect+damageA+helpM;
 }
+
 
