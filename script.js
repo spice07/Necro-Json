@@ -434,7 +434,8 @@ const assistOptions = [
   { value: 2, label: "白兵" },
   { value: 3, label: "射撃" },
   { value: 4, label: "砲撃" },
-  { value: 5, label: "すべて" }
+  { value: 5, label: "すべて" },
+  { value: 6, label: "肉弾・白兵" }
 ];
 const partOptions=[
   { value: 0, label: "？" },
@@ -642,6 +643,12 @@ function summarizeAssist(maneuverList) {//補正値まとめコーナー
   maneuverList.forEach(m => {
     if (m.assist === 5) {//すべて
       for (let i = 1; i <= 4; i++) {
+        groups[i].diceA += Number(m.diceA || 0);
+        groups[i].damageA += Number(m.damageA || 0);
+        groups[i].names.push(m.nameM);
+      }
+    }else if (m.assist === 6) {//肉弾・白兵
+      for (let i = 1; i <= 2; i++) {
         groups[i].diceA += Number(m.diceA || 0);
         groups[i].damageA += Number(m.damageA || 0);
         groups[i].names.push(m.nameM);
