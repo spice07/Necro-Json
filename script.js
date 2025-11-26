@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById("parseBtn").addEventListener("click", () => {
   const input = document.getElementById("input").value;
-  if (!input.trim()) return alert("chara.txtの内容を入力してください。");
+  if (!input.trim()) return alert("データ出力.txtの内容を入力してください。");
 
   maneuverList = [];//武器テーブル初期化
   const lines = input.split("\n");
@@ -36,15 +36,15 @@ document.getElementById("parseBtn").addEventListener("click", () => {
 
 document.getElementById("ChatPalletBtn").addEventListener("click", () => {
   const text = document.getElementById("output").textContent;
-  if (!text.trim()) return alert("出力がありません。まずParseしてください。");
+  if (!text.trim()) return alert("出力がありません。まずマニューバを検出してください。");
 
   Commands="";
   let allM="";
   //console.log(maneuverList);
   for (const mData of maneuverList) {
-    allM+=("【"+ textOfSengen(mData)+"\n");
+    allM+=("【"+ textOfSengen(mData,0)+"\n");
     if(mData.sengen==false)continue;
-    Commands+=textOfSengen(mData)+"\n";
+    Commands+=textOfSengen(mData,1)+"\n";
     if(mData.roll!==0){
       //console.log(textOfRoll_A(mData));
       Commands+=textOfRoll_A(mData)+"\n";
@@ -77,7 +77,7 @@ document.getElementById("output").addEventListener("click", function() {
 
 document.getElementById("downloadBtn").addEventListener("click", () => {
   const text = document.getElementById("output").textContent;
-  if (!text.trim()) return alert("出力がありません。まずParseしてください。");
+  if (!text.trim()) return alert("出力がありません。まずマニューバを検出してください。");
 
   const blob = new Blob([text], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
@@ -595,6 +595,9 @@ function createRow(m) {
     tr.remove();
     const index = maneuverList.indexOf(m);
     if (index >= 0) maneuverList.splice(index, 1);
+    enableAutoAssistSummaryUpdate();
+    showAssistSummaryTable(maneuverList);
+
   };
   tdDel.appendChild(btn);
   tr.appendChild(tdDel);
@@ -738,8 +741,11 @@ function readTableToList() {
 }
 
 
-function textOfSengen(m){//mはManeuverData
-  return m.nameM+"】"+m.timing+"/"+m.cost+"/"+m.range+","+m.effect ;
+function textOfSengen(m,yesno){//mはManeuverData yesnoが0だと対象表記絶対無し
+  let target="";
+  if(m.attack!==0){
+    target="　対象[○○]";}
+  return m.nameM+"】"+m.timing+"/"+m.cost+"/"+m.range+","+m.effect+target ;
 }
 
 function textOfRoll_A(m){//mはManeuverData
@@ -747,7 +753,7 @@ function textOfRoll_A(m){//mはManeuverData
   let diceA="";//補正値
   let damageA="";
   let helpM="";
-  if(m.roll===1){//naじゃなきゃ補正は考えない
+  //if(m.roll===1){//naじゃなきゃ補正は考えない
     const data=summary[m.attack-1];
     //console.log(data);
     if(m.assist===0)data.diceA+=Number(m.diceA);
@@ -756,6 +762,6 @@ function textOfRoll_A(m){//mはManeuverData
     if(data.damageA>0){damageA="(+"+data.damageA+"ダメ)";}//ダメ補正
     if(data.damageA<0){damageA="(" +data.damageA+"ダメ)";}
     if(data.names.length>0){helpM="(+"+data.names.join(",") +")";}
-  }
+  //}
   return returnRoll(m.roll) +diceA +" "+m.nameM+"】"+m.effect+damageA+helpM;
 }
